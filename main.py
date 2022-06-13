@@ -42,6 +42,7 @@ class Dinosaur:
         self.dino_run = True
         self.dino_jump = False
         self.jump_velocity = self.JUMP_VELOCITY
+        self.color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
         self.rect = pygame.Rect(self.X_POS, self.Y_POS, img.get_width(), img.get_height())
         self.step_index = 0
 
@@ -71,6 +72,9 @@ class Dinosaur:
     
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.rect.x, self.rect.y))
+        pygame.draw.rect(SCREEN, self.color, (self.rect.x, self.rect.y, self.rect.width, self.rect.height), 2)
+        for obstacle in obstacles:
+            pygame.draw.line(SCREEN, self.color, (self.rect.x+54, self.rect.y+12), obstacle.rect.center, 2)
 
 class Obstacle:
     def __init__(self, img, number_of_cacti):
@@ -148,6 +152,15 @@ def eval_genomes(genomes, config):
             x_pos_bg = 0
         x_pos_bg -= game_speed
 
+    def statistics():
+        global dinos, game_speed, genomes_list
+        text1 = FONT.render(f'Dinosaurs Alive: {str(len(dinos))}', True, (0, 0, 0))
+        text2 = FONT.render(f'Game Speed: {str(game_speed)}', True, (0, 0, 0))
+        text3 = FONT.render(f'Generation: {pop.generation+1}', True, (0, 0, 0))
+
+        SCREEN.blit(text1, (50, 450))
+        SCREEN.blit(text2, (50, 480))
+        SCREEN.blit(text3, (50, 510))
     # Run loop
 
     run = True
@@ -190,6 +203,7 @@ def eval_genomes(genomes, config):
                 dino.dino_jump = True
                 dino.dino_run = False
         score()
+        statistics()
         background()
         clock.tick(30)
         pygame.display.update()
@@ -197,6 +211,7 @@ def eval_genomes(genomes, config):
 # Setting up NEAT
 
 def run(config_path):
+    global pop
     config = neat.config.Config(
         neat.DefaultGenome,
         neat.DefaultReproduction,
