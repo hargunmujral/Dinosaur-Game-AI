@@ -138,7 +138,7 @@ def eval_genomes(genomes, config):
     def score():
         global points, game_speed
         points += 1
-        if points % 10 == 0:
+        if points % 100 == 0:
             game_speed += 1
         score = FONT.render(f'Points: {(str(points))}', True, (0, 0, 0))
         SCREEN.blit(score, (950, 50))
